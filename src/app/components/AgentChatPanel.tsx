@@ -279,7 +279,7 @@ function ViewReportBtn({ href }: { href: string }) {
       onClick={() => window.open(href, "_blank")}
     >
       <span className="text-[#383838] text-[14px] tracking-[0.07px]">
-        查看分析报告
+        查看信号分析数据
       </span>
     </div>
   );
@@ -434,7 +434,7 @@ function A2ASeparatorStart() {
               background: "rgba(72,102,156,0.1)",
             }}
           >
-            连小山 ⟷ 博世Agent
+            连小山 ⟷ 汇川Agent
           </span>
         </div>
         <div
@@ -641,7 +641,7 @@ function Msg2Running({
       <LxsAvatar />
       <div className="flex flex-col gap-[6px] flex-1 min-w-0 overflow-hidden">
         <SenderRow name="连小山" time="10:28" />
-        <WhiteCard title="将分析结论发送给博世Agent" isA2A>
+        <WhiteCard title="将分析结论发送给汇川Agent" isA2A>
           <YellowBadge>
             <span className="text-[#48669c]">@连小山</span>
             <span className="text-[#cb802b]">请求 </span>
@@ -678,7 +678,7 @@ function Msg2({
       <LxsAvatar />
       <div className="flex flex-col gap-[6px] flex-1 min-w-0 overflow-hidden">
         <SenderRow name="连小山" time="10:28" />
-        <WhiteCard title="将分析结论发送给博世Agent" isA2A>
+        <WhiteCard title="将分析结论发送给汇川Agent" isA2A>
           <YellowBadge>
             <span className="text-[#48669c]">@{assignee}</span>
             <span className="text-[#cb802b]">已完成任务</span>
@@ -706,10 +706,10 @@ function Msg3({ assignee }: MsgProps) {
       <BoshiAvatar />
       <div className="flex flex-col gap-[6px] flex-1 min-w-0 overflow-hidden">
         <SenderRow
-          name={assignee ?? "博世Agent"}
+          name={assignee ?? "汇川Agent"}
           time="10:28"
         />
-        <BlueCard title="将分析结论发送给博世Agent" isA2A>
+        <BlueCard title="将分析结论发送给汇川Agent" isA2A>
           <div
             className="rounded p-2 w-full"
             style={{ background: "rgba(255,255,255,0.5)" }}
@@ -736,7 +736,7 @@ function Msg4Waiting({
       <LxsAvatar />
       <div className="flex flex-col gap-[6px] flex-1 min-w-0 overflow-hidden">
         <SenderRow name="连小山" time="10:28" />
-        <WhiteCard title="从博世Agent获取分析数据" isA2A>
+        <WhiteCard title="从汇川Agent获取分析数据" isA2A>
           <YellowBadge>
             <span className="text-[#48669c]">@连小山</span>
             <span className="text-[#cb802b]">请求</span>
@@ -772,7 +772,7 @@ function Msg4Done({
       <LxsAvatar />
       <div className="flex flex-col gap-[6px] flex-1 min-w-0 overflow-hidden">
         <SenderRow name="连小山" time="10:28" />
-        <WhiteCard title="从博世Agent获取分析数据" isA2A>
+        <WhiteCard title="从汇川Agent获取分析数据" isA2A>
           <YellowBadge>
             <span className="text-[#48669c]">@{assignee}</span>
             <span className="text-[#cb802b]">已完成任务</span>
@@ -801,10 +801,10 @@ function Msg5({ assignee }: MsgProps) {
       <BoshiAvatar />
       <div className="flex flex-col gap-[6px] flex-1 min-w-0 overflow-hidden">
         <SenderRow
-          name={assignee ?? "博世Agent"}
+          name={assignee ?? "汇川Agent"}
           time="10:28"
         />
-        <BlueCard title="从博世Agent获取分析数据" isA2A>
+        <BlueCard title="从汇川Agent获取分析数据" isA2A>
           <div
             className="rounded p-2 w-full flex flex-col gap-[10px]"
             style={{ background: "rgba(255,255,255,0.5)" }}
@@ -913,8 +913,8 @@ function Msg6({
         <SenderRow name="连小山" time="10:28" />
         <WhiteCard title="生成完整报告">
           <GrayBlock>
-            结合{assignee ?? "博世Agent"}
-            结论，ESP控制模块总成相同批次、相同软硬件版本在其他OEM客户处均未触发同类故障，目前仅在本客户整车上出现。初步怀疑与本车型整车供电策略或ESP标定参数相关，需协调博世应用工程团队与本客户研发共同排查，确认是否需要针对本车型进行供电时序或标定参数的专项优化。
+            结合{assignee ?? "汇川Agent"}
+            结论，ESP控制模块总成相同批次、相同软硬件版本在其他OEM客户处均未触发同类故障，目前仅在本客户整车上出现。初步怀疑与本车型整车供电策略或ESP标定参数相关，需协调汇川应用工程团队与本客户研发共同排查，确认是否需要针对本车型进行供电时序或标定参数的专项优化。
           </GrayBlock>
           <ViewReportBtn href="https://vip.lianshan.xyz/app/ls_datascience_project/LADS-RHEA-4002?page=a2a_total_report" />
           <Divider />
@@ -1081,12 +1081,12 @@ const MSGS_REASSIGNABLE = new Set<MsgKey>([
 
 // Default assignees
 const DEFAULT_ASSIGNEES: Partial<Record<MsgKey, string>> = {
-  msg2r: "博世Agent",
-  msg2: "博世Agent",
-  msg3: "博世Agent",
-  msg4w: "博世Agent",
-  msg4d: "博世Agent",
-  msg5: "博世Agent",
+  msg2r: "汇川Agent",
+  msg2: "汇川Agent",
+  msg3: "汇川Agent",
+  msg4w: "汇川Agent",
+  msg4d: "汇川Agent",
+  msg5: "汇川Agent",
   msg7: "王一",
   msg8: "王一",
 };
