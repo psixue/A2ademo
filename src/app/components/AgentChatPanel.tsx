@@ -43,6 +43,19 @@ function BoshiAvatar() {
   );
 }
 
+function HuichuanAvatar() {
+  return (
+    <div className="relative shrink-0 w-8 h-[29px] overflow-clip">
+      <img
+        alt="汇川Agent"
+        src={imgFlow}
+        className="absolute max-w-none object-cover pointer-events-none"
+        style={{ width: 43.758, height: 40.44, left: -5.88, top: -5.43 }}
+      />
+    </div>
+  );
+}
+
 function SenderRow({
   name,
   time,
@@ -592,30 +605,109 @@ function Msg1({
   onAnnotate,
   canReassign,
   onOpenReassign,
-}: MsgProps) {
+  agentType,
+}: MsgProps & { agentType?: string }) {
+  const isQuality = agentType === "quality";
+  const title = isQuality ? "故障工况分析" : "索赔单生成";
+
   return (
     <div className="flex gap-2 items-start pt-1">
       <LxsAvatar />
       <div className="flex flex-col gap-[6px] flex-1 min-w-0 overflow-hidden">
         <SenderRow name="连小山" time="10:28" />
-        <WhiteCard title="索赔详情分析">
-          <GrayBlock>
-            <p className="text-[#171717] mb-[4px]">
-              连山诊断助手总结
-            </p>
-            <p>
-              该车于2026-03-26 09:15:42 触发异常工况
-              <span className="text-[#171717]">
-                绝缘阻值偏低(阻值降至480k欧姆，阈值500k欧姆)
-              </span>
-              。
-            </p>
-            <p className="text-[#171717] mb-[4px]">失效描述</p>
-            <p className="mt-[4px]">
-              车辆行驶中绝缘监测系统报出绝缘失效故障码,绝缘阻值持续低于安全闻值。回溯数据显示失效前已出现绝缘阻值偏低预警工况。{" "}
-            </p>
-          </GrayBlock>
-          <ViewReportBtn href="https://vip.lianshan.xyz/app/ls_datascience_project/LADS-RHEA-4002?page=a2a_li_report" />
+        <WhiteCard title={title}>
+          {isQuality ? (
+            <>
+              <GrayBlock>
+                <div className="flex flex-col gap-[6px]">
+                  <div className="grid grid-cols-[auto_1fr] gap-x-[8px] gap-y-[3px] text-[12px] leading-[1.6]">
+                    <span className="text-[#999] shrink-0">预警类型：</span>
+                    <span className="text-[#171717]">电驱绝缘异常</span>
+                    <span className="text-[#999] shrink-0">失效原因：</span>
+                    <span className="text-[#383838]">绝缘异常</span>
+                    <span className="text-[#999] shrink-0">车辆VIN：</span>
+                    <span className="text-[#383838]">LSJA24U39RA000101</span>
+                    <span className="text-[#999] shrink-0">失效时间：</span>
+                    <span className="text-[#383838]">2026-03-28 14:32:17</span>
+                  </div>
+                  <div className="border-t border-dashed border-[#e2e2e2] pt-[6px]">
+                    <p className="text-[#999] text-[12px] mb-[4px]">关联工况：</p>
+                    <div className="bg-[#fffbf0] border border-[rgba(203,128,43,0.2)] rounded px-[8px] py-[6px] flex flex-col gap-[2px]">
+                      <span className="text-[#cb802b] text-[11px]">2026-03-26 09:15:42（早于失效时间）</span>
+                      <span className="text-[#383838] text-[12px]">该车辆触发绝缘阻值偏低（阻值降至480kΩ，阈值500kΩ）</span>
+                    </div>
+                  </div>
+                  <div className="border-t border-dashed border-[#e2e2e2] pt-[6px]">
+                    <p className="text-[#999] text-[12px] mb-[4px]">失效描述：</p>
+                    <p className="text-[#383838] text-[12px] leading-[1.6]">
+                      车辆行驶中绝缘监测系统报出绝缘失效故障码，绝缘阻值持续低于安全阈值。回溯数据显示失效前已出现绝缘阻值偏低预警工况。
+                    </p>
+                  </div>
+                </div>
+              </GrayBlock>
+              <ViewReportBtn href="https://lianshan.chehejia.com/hd/tool/work_condition_restoration?vin=LW433B129N1041855&fault_time=1775699500&idtc_id=27&idtc_cause_id=X01_airbag_RRress_high_AirbegWrnngLamp_x&fault_tree_version=94&signals=UTCTime,LowVolPwrMd,VehSpd,VehicleChrgSts,EnSts,XCU_DTC4_Num,ACU_DTC4_Num,WarningInfo_MSG_AirbegWrnngLampSts,XCU_DTC3_Num,ACU_DTC2_Num,XCU_DTC1_Num,veh_series,XCU_DTC2_Num,ACU_DTC3_Num,ACU_DTC1_Num" />
+            </>
+          ) : (
+            <GrayBlock>
+              <div className="flex flex-col gap-[6px]">
+                {/* 车辆信息 */}
+                <div>
+                  <p className="text-[#999] text-[11px] mb-[4px]">车辆信息</p>
+                  <div className="grid grid-cols-[auto_1fr] gap-x-[8px] gap-y-[3px] text-[12px] leading-[1.6]">
+                    <span className="text-[#999] shrink-0">车辆VIN：</span>
+                    <span className="text-[#383838]">LSJA24U39RA000101</span>
+                    <span className="text-[#999] shrink-0">绝缘预警时间：</span>
+                    <span className="text-[#383838]">2026-03-28 14:32:17</span>
+                    <span className="text-[#999] shrink-0">用户进店时间：</span>
+                    <span className="text-[#383838]">2026-03-29 09:20:00</span>
+                  </div>
+                </div>
+                {/* 到店检测结果 */}
+                <div className="border-t border-dashed border-[#e2e2e2] pt-[6px]">
+                  <p className="text-[#999] text-[11px] mb-[4px]">到店检测结果</p>
+                  <div className="grid grid-cols-[auto_1fr] gap-x-[8px] gap-y-[3px] text-[12px] leading-[1.6]">
+                    <span className="text-[#999] shrink-0">检测时间：</span>
+                    <span className="text-[#383838]">2026-03-29 10:05:00</span>
+                    <span className="text-[#999] shrink-0">双电机控制器绝缘阻值：</span>
+                    <span className="text-[#e03636] font-medium">385kΩ（不合格）</span>
+                    <span className="text-[#999] shrink-0">压缩机绝缘阻值：</span>
+                    <span className="text-[#16794c]">1150kΩ（合格）</span>
+                    <span className="text-[#999] shrink-0">检测结论：</span>
+                    <span className="text-[#383838]">双电机控制器绝缘阻值低于安全阈值，需更换</span>
+                  </div>
+                </div>
+                {/* 索赔明细 */}
+                <div className="border-t border-dashed border-[#e2e2e2] pt-[6px]">
+                  <p className="text-[#999] text-[11px] mb-[6px]">索赔明细</p>
+                  <table className="w-full text-[12px] border-collapse">
+                    <thead>
+                      <tr className="border-b border-[#e2e2e2]">
+                        <th className="text-left text-[#999] font-normal pb-[4px] pr-[8px]">项目</th>
+                        <th className="text-left text-[#999] font-normal pb-[4px] pr-[8px]">明细</th>
+                        <th className="text-right text-[#999] font-normal pb-[4px]">金额（元）</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td className="text-[#383838] py-[3px] pr-[8px]">索赔零件</td>
+                        <td className="text-[#383838] py-[3px] pr-[8px]">双电机控制器</td>
+                        <td className="text-[#383838] py-[3px] text-right">12,800.00</td>
+                      </tr>
+                      <tr>
+                        <td className="text-[#383838] py-[3px] pr-[8px]">工时费</td>
+                        <td className="text-[#383838] py-[3px] pr-[8px]">拆装更换工时</td>
+                        <td className="text-[#383838] py-[3px] text-right">650.00</td>
+                      </tr>
+                      <tr className="border-t border-[#e2e2e2]">
+                        <td className="text-[#171717] font-medium pt-[4px] pr-[8px]" colSpan={2}>索赔总计</td>
+                        <td className="text-[#171717] font-medium pt-[4px] text-right">13,450.00</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </GrayBlock>
+          )}
           <Divider />
           <ActionRow
             canAnnotate={canAnnotate}
@@ -635,13 +727,15 @@ function Msg2Running({
   assignee,
   canReassign,
   onOpenReassign,
-}: MsgProps) {
+  agentType,
+}: MsgProps & { agentType?: string }) {
+  const isQuality = agentType === "quality";
   return (
     <div className="flex gap-2 items-start pt-1">
       <LxsAvatar />
       <div className="flex flex-col gap-[6px] flex-1 min-w-0 overflow-hidden">
         <SenderRow name="连小山" time="10:28" />
-        <WhiteCard title="将分析结论发送给汇川Agent" isA2A>
+        <WhiteCard title={isQuality ? "将预警结论发送给汇川Agent" : "将索赔单发送给汇川Agent"} isA2A>
           <YellowBadge>
             <span className="text-[#48669c]">@连小山</span>
             <span className="text-[#cb802b]">请求 </span>
@@ -649,8 +743,10 @@ function Msg2Running({
             <span className="text-[#cb802b]">协助排查</span>
           </YellowBadge>
           <GrayBlock>
-            连小山无更多可分析数据，将分析报告及数据发送给
-            {assignee}，等待{assignee}分析结果
+            {isQuality
+              ? <>连小山已完成故障工况分析，将预警结论及相关数据发送给{assignee}，等待{assignee}提供零件分析数据</>
+              : <>连小山已生成索赔单，将索赔单及相关数据发送给{assignee}，等待{assignee}审核反馈</>
+            }
           </GrayBlock>
           <Divider />
           <TimestampFooter seconds="0.674s" />
@@ -672,19 +768,24 @@ function Msg2({
   assignee,
   canReassign,
   onOpenReassign,
-}: MsgProps) {
+  agentType,
+}: MsgProps & { agentType?: string }) {
+  const isQuality = agentType === "quality";
   return (
     <div className="flex gap-2 items-start pt-1">
       <LxsAvatar />
       <div className="flex flex-col gap-[6px] flex-1 min-w-0 overflow-hidden">
         <SenderRow name="连小山" time="10:28" />
-        <WhiteCard title="将分析结论发送给汇川Agent" isA2A>
+        <WhiteCard title={isQuality ? "将预警结论发送给汇川Agent" : "将索赔单发送给汇川Agent"} isA2A>
           <YellowBadge>
             <span className="text-[#48669c]">@{assignee}</span>
             <span className="text-[#cb802b]">已完成任务</span>
           </YellowBadge>
           <GrayBlock>
-            已将分析数据发送至{assignee}，{assignee}成功接收
+            {isQuality
+              ? <>已将预警结论及分析数据发送至{assignee}，{assignee}成功接收</>
+              : <>已将索赔单发送至{assignee}，{assignee}成功接收</>
+            }
           </GrayBlock>
           <Divider />
           <TimestampFooter seconds="0.674s" />
@@ -700,22 +801,25 @@ function Msg2({
   );
 }
 
-function Msg3({ assignee }: MsgProps) {
+function Msg3({ assignee, agentType }: MsgProps & { agentType?: string }) {
+  const isQuality = agentType === "quality";
   return (
     <div className="flex gap-2 items-start pt-1">
-      <BoshiAvatar />
+      <HuichuanAvatar />
       <div className="flex flex-col gap-[6px] flex-1 min-w-0 overflow-hidden">
         <SenderRow
           name={assignee ?? "汇川Agent"}
           time="10:28"
         />
-        <BlueCard title="将分析结论发送给汇川Agent" isA2A>
+        <BlueCard title={isQuality ? "将预警结论发送给汇川Agent" : "将索赔单发送给汇川Agent"} isA2A>
           <div
             className="rounded p-2 w-full"
             style={{ background: "rgba(255,255,255,0.5)" }}
           >
             <p className="text-[#7c7c7c] text-[12px] leading-[1.6] tracking-[-0.06px]">
-              已收到连小山的索赔详情，正在分析索赔原因
+              {isQuality
+                ? "已收到连小山的预警结论，正在分析零件根因数据"
+                : "已收到连小山的索赔单，正在审核索赔信息"}
             </p>
           </div>
         </BlueCard>
@@ -730,13 +834,15 @@ function Msg4Waiting({
   assignee,
   canReassign,
   onOpenReassign,
-}: MsgProps) {
+  agentType,
+}: MsgProps & { agentType?: string }) {
+  const isQuality = agentType === "quality";
   return (
     <div className="flex gap-2 items-start pt-1">
       <LxsAvatar />
       <div className="flex flex-col gap-[6px] flex-1 min-w-0 overflow-hidden">
         <SenderRow name="连小山" time="10:28" />
-        <WhiteCard title="从汇川Agent获取分析数据" isA2A>
+        <WhiteCard title={isQuality ? "从汇川Agent获取零件数据" : "从汇川Agent获取反馈数据"} isA2A>
           <YellowBadge>
             <span className="text-[#48669c]">@连小山</span>
             <span className="text-[#cb802b]">请求</span>
@@ -744,9 +850,11 @@ function Msg4Waiting({
             <span className="text-[#cb802b]">协助排查</span>
           </YellowBadge>
           <GrayBlock>
-            连小山正在等待{assignee}分析根因
+            {isQuality
+              ? <>连小山正在等待{assignee}提供零件分析数据</>
+              : <>连小山正在等待{assignee}审核索赔单</>
+            }
           </GrayBlock>
-          <Divider />
           <TimestampFooter seconds="0.674s" />
           <ActionRow
             canAnnotate={canAnnotate}
@@ -766,20 +874,24 @@ function Msg4Done({
   assignee,
   canReassign,
   onOpenReassign,
-}: MsgProps) {
+  agentType,
+}: MsgProps & { agentType?: string }) {
+  const isQuality = agentType === "quality";
   return (
     <div className="flex gap-2 items-start pt-1">
       <LxsAvatar />
       <div className="flex flex-col gap-[6px] flex-1 min-w-0 overflow-hidden">
         <SenderRow name="连小山" time="10:28" />
-        <WhiteCard title="从汇川Agent获取分析数据" isA2A>
+        <WhiteCard title={isQuality ? "从汇川Agent获取零件数据" : "从汇川Agent获取反馈数据"} isA2A>
           <YellowBadge>
             <span className="text-[#48669c]">@{assignee}</span>
             <span className="text-[#cb802b]">已完成任务</span>
           </YellowBadge>
           <GrayBlock>
-            {assignee}已完成分析，连小山成功接收{assignee}
-            分析结论
+            {isQuality
+              ? <>{assignee}已完成零件分析，连小山成功接收{assignee}零件数据</>
+              : <>{assignee}已完成审核，连小山成功接收{assignee}审核反馈</>
+            }
           </GrayBlock>
           <Divider />
           <TimestampFooter seconds="0.674s" />
@@ -795,104 +907,97 @@ function Msg4Done({
   );
 }
 
-function Msg5({ assignee }: MsgProps) {
+function Msg5({ assignee, agentType }: MsgProps & { agentType?: string }) {
+  const isQuality = agentType === "quality";
+
   return (
     <div className="flex gap-2 items-start pt-1">
-      <BoshiAvatar />
+      <HuichuanAvatar />
       <div className="flex flex-col gap-[6px] flex-1 min-w-0 overflow-hidden">
         <SenderRow
           name={assignee ?? "汇川Agent"}
           time="10:28"
         />
-        <BlueCard title="从汇川Agent获取分析数据" isA2A>
-          <div
-            className="rounded p-2 w-full flex flex-col gap-[10px]"
-            style={{ background: "rgba(255,255,255,0.5)" }}
-          >
-            {[
-              {
-                root: "电磁阀驱动芯片虚焊，振动疲劳断裂致无法建压",
-                part: "IPB集成智能制动单元总成",
-                qty: 2,
-                breakpoint:
-                  "2025-11-18（W47)更换芯片供应商，新增X-ray全检",
-              },
-              {
-                root: "电源管理IC高温退化，供电电压跌落触发安全关断",
-                part: "ESP控制模块总成、ESP控制模块总成（湿式）",
-                qty: 3,
-                breakpoint:
-                  "2025-09-22（W39）升级IC耐温等级至125C",
-              },
-              {
-                root: "电机位置传感器信号漂移，进入安全降级",
-                part: "iBooster控制模块带主缸总成",
-                qty: 1,
-                breakpoint: "2025-12-09（W50）增加温漂补偿标定",
-              },
-              {
-                root: "换能器密封圈老化进水，压电陶瓷片受潮失效",
-                part: "超声波雷达探头 灰色金属漆",
-                qty: 1,
-                breakpoint:
-                  "2026-01-13（W03）密封圈材料NBR→FKM",
-              },
-              {
-                root: "连接器端子镀层不均，接触电阻偏高致信号丢失",
-                part: "前碰传感器",
-                qty: 1,
-                breakpoint: "2025-10-27（W44）改为化学镀镍金",
-              },
-              {
-                root: "磁环与传感器间隙超差，输出信号幅值不足",
-                part: "轮速传感器总成",
-                qty: 1,
-                breakpoint:
-                  "2025-08-11（W33）间隙公差收紧至0.3-0.8mm",
-              },
-            ].map((item, idx, arr) => (
-              <div key={idx}>
-                <div className="flex flex-col gap-[3px] text-[12px] leading-[1.6] tracking-[-0.06px]">
-                  <div className="flex gap-[4px]">
-                    <span className="text-[#999] shrink-0">
-                      根因:
-                    </span>
-                    <span className="text-[#383838]">
-                      {item.root}
-                    </span>
-                  </div>
-                  <div className="flex gap-[4px]">
-                    <span className="text-[#999] shrink-0">
-                      涉及零件:
-                    </span>
-                    <span className="text-[#383838]">
-                      {item.part}
-                    </span>
-                  </div>
-                  <div className="flex gap-[4px]">
-                    <span className="text-[#999] shrink-0">
-                      数量:
-                    </span>
-                    <span className="text-[#383838]">
-                      {item.qty}
-                    </span>
-                  </div>
-                  <div className="flex gap-[4px]">
-                    <span className="text-[#999] shrink-0">
-                      断点:
-                    </span>
-                    <span className="text-[#383838]">
-                      {item.breakpoint}
-                    </span>
-                  </div>
-                </div>
-                {idx < arr.length - 1 && (
-                  <div className="mt-[10px] border-t border-dashed border-[#e2e2e2]" />
-                )}
+        <BlueCard title="从汇川Agent获取反馈数据" isA2A>
+          {isQuality ? (
+            <div
+              className="rounded p-2 w-full flex flex-col gap-[10px]"
+              style={{ background: "rgba(255,255,255,0.5)" }}
+            >
+              {/* 结论摘要 */}
+              <div className="grid grid-cols-[auto_1fr] gap-x-[8px] gap-y-[3px] text-[12px] leading-[1.6]">
+                <span className="text-[#999] shrink-0">分析结论：</span>
+                <span className="inline-flex items-center gap-[4px]">
+                  <span className="text-[#16794c] font-medium">预警准确</span>
+                  <span className="bg-[#f0fdf4] border border-[#bbf7d0] text-[#16794c] text-[10px] px-[5px] py-px rounded-full">✓ 确认</span>
+                </span>
+                <span className="text-[#999] shrink-0">根因：</span>
+                <span className="text-[#171717] font-medium">壳体压铸分层缺陷</span>
+                <span className="text-[#999] shrink-0">回复时间：</span>
+                <span className="text-[#383838]">2026-03-29 10:05:33</span>
               </div>
-            ))}
-          </div>
-          <ViewReportBtn href="https://vip.lianshan.xyz/app/ls_datascience_project/LADS-RHEA-4002?page=a2a_supplier_report" />
+              <div className="border-t border-dashed border-[#e2e2e2]" />
+              <div>
+                <p className="text-[#999] text-[11px] mb-[4px]">失效机理</p>
+                <p className="text-[#383838] text-[12px] leading-[1.6]">
+                  模具老化龟裂，压铸过程中模具上端部分铝皮飞边等粘附于模具表面，卡在下端模具上；合模压铸时，铝皮与正常浇注的铝液温度不一致，未能完全融合，导致压铸件出现分层现象。
+                </p>
+              </div>
+              <div className="border-t border-dashed border-[#e2e2e2]" />
+              <div>
+                <p className="text-[#999] text-[11px] mb-[4px]">失效路径</p>
+                <div className="flex flex-col gap-[2px] text-[12px]">
+                  {["模具老化龟裂","铝皮飞边粘附模具表面","合模压铸时铝皮与铝液温差致未融合","壳体压铸件出现分层缺陷","壳体密封性下降，湿气渗入","绝缘材料受潮劣化","绝缘阻值降低，触发绝缘失效"].map((s, i) => (
+                    <div key={i} className="flex items-start gap-[4px]">
+                      <span className="text-[#cb802b] shrink-0 mt-px" style={{ paddingLeft: `${i * 8}px` }}>{i === 0 ? "⊙" : "↓"}</span>
+                      <span className="text-[#383838]">{s}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="border-t border-dashed border-[#e2e2e2]" />
+              <div>
+                <p className="text-[#999] text-[11px] mb-[4px]">改善措施</p>
+                <div className="flex flex-col gap-[4px] text-[12px]">
+                  {["更换壳体供应商","增加X光探查，对压铸件内部分层/气孔等缺陷进行全检筛查"].map((item, i) => (
+                    <div key={i} className="flex gap-[6px] items-start">
+                      <span className="shrink-0 size-[16px] rounded-full bg-[#48669c] text-white text-[10px] flex items-center justify-center mt-[1px]">{i + 1}</span>
+                      <span className="text-[#383838]">{item}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div
+              className="rounded p-2 w-full flex flex-col gap-[10px]"
+              style={{ background: "rgba(255,255,255,0.5)" }}
+            >
+              {/* 审核结论 */}
+              <div>
+                <p className="text-[#999] text-[11px] mb-[4px]">审核结论</p>
+                <div className="grid grid-cols-[auto_1fr] gap-x-[8px] gap-y-[3px] text-[12px] leading-[1.6]">
+                  <span className="text-[#999] shrink-0">索赔单号：</span>
+                  <span className="text-[#383838]">CL-2026-0401-001</span>
+                  <span className="text-[#999] shrink-0">审核结果：</span>
+                  <span className="text-[#16794c] font-medium">✓ 索赔信息确认无误</span>
+                  <span className="text-[#999] shrink-0">确认时间：</span>
+                  <span className="text-[#383838]">2026-03-30 09:15:33</span>
+                  <span className="text-[#999] shrink-0">确认金额：</span>
+                  <span className="text-[#171717] font-medium">¥13,450.00</span>
+                </div>
+              </div>
+              <div className="border-t border-dashed border-[#e2e2e2]" />
+              {/* 审核说明 */}
+              <div>
+                <p className="text-[#999] text-[11px] mb-[4px]">审核说明</p>
+                <p className="text-[#383838] text-[12px] leading-[1.6]">
+                  经核实，该车辆VIN LSJA24U39RA000101绝缘预警记录与到店测结果一致，双电机控制器绝缘阻值385kΩ低于安全阈值，符合索赔条件，零件费用及工时费用确认无误。
+                </p>
+              </div>
+            </div>
+          )}
+          {!isQuality && <ViewReportBtn href="https://vip.lianshan.xyz/app/ls_datascience_project/LADS-RHEA-4002?page=a2a_supplier_report" />}
         </BlueCard>
       </div>
     </div>
@@ -1091,54 +1196,14 @@ const DEFAULT_ASSIGNEES: Partial<Record<MsgKey, string>> = {
   msg8: "王一",
 };
 
-function getMessages(step: number): MsgKey[] {
+function getMessages(step: number, agentType: "aftersales" | "quality" = "aftersales"): MsgKey[] {
+  // 两个专家共用同一套 6 步消息流
   if (step === 0) return ["msg1"];
   if (step === 1) return ["msg1", "a2a-start", "msg2r"];
-  if (step === 2)
-    return ["msg1", "a2a-start", "msg2", "msg3", "msg4w"];
-  if (step === 3)
-    return [
-      "msg1",
-      "a2a-start",
-      "msg2",
-      "msg3",
-      "msg4d",
-      "msg5",
-    ];
-  if (step === 4)
-    return [
-      "msg1",
-      "a2a-start",
-      "msg2",
-      "msg3",
-      "msg4d",
-      "msg5",
-      "a2a-end",
-      "msg6",
-    ];
-  if (step === 5)
-    return [
-      "msg1",
-      "a2a-start",
-      "msg2",
-      "msg3",
-      "msg4d",
-      "msg5",
-      "a2a-end",
-      "msg6",
-      "msg7",
-    ];
-  return [
-    "msg1",
-    "a2a-start",
-    "msg2",
-    "msg3",
-    "msg4d",
-    "msg5",
-    "a2a-end",
-    "msg6",
-    "msg8",
-  ];
+  if (step === 2) return ["msg1", "a2a-start", "msg2", "msg3", "msg4w"];
+  if (step === 3) return ["msg1", "a2a-start", "msg2", "msg3", "msg4d", "msg5"];
+  if (step === 4) return ["msg1", "a2a-start", "msg2", "msg3", "msg4d", "msg5", "a2a-end", "msg7"];
+  return ["msg1", "a2a-start", "msg2", "msg3", "msg4d", "msg5", "a2a-end", "msg8"];
 }
 
 function getAnnotatableKey(messages: MsgKey[]): MsgKey | null {
@@ -1152,9 +1217,11 @@ function getAnnotatableKey(messages: MsgKey[]): MsgKey | null {
 
 export function AgentChatPanel({
   step,
+  agentType = "aftersales",
   onTaskReassign,
 }: {
   step: number;
+  agentType?: "aftersales" | "quality";
   onTaskReassign?: (
     taskId: number,
     assignees: string[],
@@ -1173,8 +1240,26 @@ export function AgentChatPanel({
     Partial<Record<MsgKey, string>>
   >({});
 
-  const messages = getMessages(step);
+  const messages = getMessages(step, agentType);
   const annotatableKey = getAnnotatableKey(messages);
+
+  // 判断某个消息所在任务组是否已完成
+  // 规则：同组中出现了"完成态"消息（msg2/msg4d/msg5/msg8），则整组已完成，不可重新指派
+  function isGroupDone(key: MsgKey): boolean {
+    // A2A 发送组（msg2r / msg2 / msg3）：msg2 出现代表发送已完成
+    if (["msg2r", "msg2", "msg3"].includes(key)) {
+      return messages.includes("msg2");
+    }
+    // A2A 获取组（msg4w / msg4d / msg5）：msg4d 或 msg5 出现代表已完成
+    if (["msg4w", "msg4d", "msg5"].includes(key)) {
+      return messages.includes("msg4d") || messages.includes("msg5");
+    }
+    // 闭环组（msg7 / msg8）：msg8 出现代表已完成
+    if (["msg7", "msg8"].includes(key)) {
+      return messages.includes("msg8");
+    }
+    return false;
+  }
 
   function getAssignee(key: MsgKey): string | undefined {
     return assigneeOverrides[key] ?? DEFAULT_ASSIGNEES[key];
@@ -1262,7 +1347,7 @@ export function AgentChatPanel({
               const Comp = MSG_MAP[key];
               const isAnnotatable = key === annotatableKey;
               const assignee = getAssignee(key);
-              const canReassign = MSGS_REASSIGNABLE.has(key);
+              const canReassign = MSGS_REASSIGNABLE.has(key) && !isGroupDone(key);
 
               const inner = A2A_CHANNEL_KEYS.has(key) ? (
                 <A2AChannelMsg>
@@ -1274,6 +1359,7 @@ export function AgentChatPanel({
                     onOpenReassign={() =>
                       setReassignModal({ open: true, key })
                     }
+                    agentType={agentType}
                   />
                 </A2AChannelMsg>
               ) : (
@@ -1285,6 +1371,7 @@ export function AgentChatPanel({
                   onOpenReassign={() =>
                     setReassignModal({ open: true, key })
                   }
+                  agentType={agentType}
                 />
               );
 

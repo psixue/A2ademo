@@ -5,47 +5,66 @@ import imgFlow from 'figma:asset/540a8d44e219ebf1016269b72e2d87d0a1e8d118.png';
 import imgWangYi from 'figma:asset/b5c611a6acf5d0300f5ea2cd4d0cc83c09723f19.png';
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Static data
+// Static data — 售后索赔专家
 // ─────────────────────────────────────────────────────────────────────────────
 
-const TASKS = [
-  { id: 1, name: '索赔详情分析', assignees: ['连小山'] },
-  { id: 2, name: '将分析结论发送给博世Agent', assignees: ['连小山', '博世Agent'] },
-  { id: 3, name: '从博世Agent获取分析数据', assignees: ['连小山', '博世Agent'] },
-  { id: 4, name: '生成完整报告', assignees: ['连小山'] },
-  { id: 5, name: '闭环验证', assignees: ['王一'] },
+const AFTERSALES_TASKS = [
+  { id: 1, name: '索赔单生成', assignees: ['连小山'] },
+  { id: 2, name: '将索赔单发送给汇川Agent', assignees: ['连小山', '汇川Agent'] },
+  { id: 3, name: '从汇川Agent获取反馈数据', assignees: ['连小山', '汇川Agent'] },
+  { id: 4, name: '预警闭环确认', assignees: ['王一'] },
 ];
 
-// 7 presentation steps → which task (0-indexed) is the active one
-// step 0: T1 running
-// step 1: T2 running (sending phase)
-// step 2: T2 done / T3 running
-// step 3: T3 running
-// step 4: T4 running
-// step 5: T4 done / T5 (闭环验证) running
-// step 6: T5 done (all complete)
-const TASK_ACTIVE_MAP = [0, 1, 2, 2, 3, 4, 5];
+// Keep TASKS as alias for backward compat with AgentChatPanel
+const TASKS = AFTERSALES_TASKS;
 
-const PROGRESS_LABEL_MAP = ['01', '02', '03', '03', '04', '05', '05'];
-
-const WO_TASK_MAP = [
-  '索赔详情分析',
-  '[A2A]将分析...',
-  '[A2A]从博世Agent...',
-  '[A2A]从博世Agent...',
-  '生成完整报告',
-  '闭环验证',
-  '闭环验证',
+const AFTERSALES_TASK_ACTIVE_MAP = [0, 1, 2, 2, 3, 4];
+const AFTERSALES_PROGRESS_LABEL_MAP = ['01', '02', '03', '03', '04', '04'];
+const AFTERSALES_WO_TASK_MAP = [
+  '索赔单生成',
+  '将索赔单...',
+  '从汇川Agent...',
+  '从汇川Agent...',
+  '预警闭环确认',
+  '预警闭环确认',
+];
+const AFTERSALES_STEP_LABELS = [
+  '索赔单生成',
+  '发送索赔单给汇川Agent',
+  '发送索赔单(汇川已响应)',
+  '获取汇川Agent反馈数据',
+  '预警闭环确认',
+  '预警闭环完成',
 ];
 
-const STEP_LABELS = [
-  '索赔详情分析',
-  '[A2A]发送结论给博世Agent',
-  '[A2A]发送结论(博世已响应)',
-  '[A2A]获取博世Agent数据',
-  '生成完整报告',
-  '闭环验证',
-  '闭环验证完成',
+// ─────────────────────────────────────────────────────────────────────────────
+// Static data — 质量预警专家
+// ─────────────────────────────────────────────────────────────────────────────
+
+const QUALITY_TASKS = [
+  { id: 1, name: '故障工况分析', assignees: ['连小山'] },
+  { id: 2, name: '将预警结论发送给汇川Agent', assignees: ['连小山', '汇川Agent'] },
+  { id: 3, name: '从汇川Agent获取零件数据', assignees: ['连小山', '汇川Agent'] },
+  { id: 4, name: '预警闭环确认', assignees: ['王一'] },
+];
+
+const QUALITY_TASK_ACTIVE_MAP = [0, 1, 2, 2, 3, 4];
+const QUALITY_PROGRESS_LABEL_MAP = ['01', '02', '03', '03', '04', '04'];
+const QUALITY_WO_TASK_MAP = [
+  '故障工况分析',
+  '将预警...',
+  '从汇川Agent...',
+  '从汇川Agent...',
+  '预警闭环确认',
+  '预警闭环确认',
+];
+const QUALITY_STEP_LABELS = [
+  '故障工况分析',
+  '发送预警结论给汇川Agent',
+  '发送结论(汇川已响应)',
+  '获取汇川Agent零件数据',
+  '预警闭环确认',
+  '预警闭环完成',
 ];
 
 // ────────────────────────────────────────────────────────────────────────────
@@ -383,20 +402,32 @@ function OKRCard({ label, value, sub, target }: OKRMetric) {
   );
 }
 
-function OKRSection() {
-  const metrics: OKRMetric[] = [
+function OKRSection({ agentType }: { agentType: 'aftersales' | 'quality' }) {
+  const isQuality = agentType === 'quality';
+
+  const aftersalesMetrics: OKRMetric[] = [
     { label: '累计解决问题数', value: '123件' },
-    { label: '覆盖率', value: '96.3%', sub: '35/100', target: '95.0%' },
-    { label: '准确率', value: '96.3%', sub: '35/100', target: '95.0%' },
-    { label: '平均处理时间', value: '0.99天', sub: '3/100', target: '1' },
+    { label: '覆盖率', value: '96.3%', target: '95.0%' },
+    { label: '准确率', value: '96.3%', target: '95.0%' },
+    { label: '平均处理时间', value: '0.99天', target: '1' },
   ];
+
+  const qualityMetrics: OKRMetric[] = [
+    { label: '累计预警次数', value: '87次' },
+    { label: '预警准确率', value: '91.4%', target: '90.0%' },
+    { label: '召回率', value: '78.2%', target: '75.0%' },
+    { label: '平均响应时间', value: '0.43天', target: '0.5' },
+  ];
+
+  const metrics = isQuality ? qualityMetrics : aftersalesMetrics;
+  const title = isQuality ? '连小山OKR' : '连小山OKR';
 
   return (
     <div className="shrink-0 bg-[#f8f8f8] border-b border-[#ededed] px-3 pt-3 pb-3 flex flex-col gap-2">
       {/* Title row */}
       <div className="flex items-center justify-between">
         <span className="text-[#0f0f0f] text-[16px] leading-[1.15] tracking-[0.08px]" style={{ fontWeight: 500 }}>
-          连小山OKR
+          {title}
         </span>
         <span className="text-[11px] text-[rgba(20,21,21,0.56)] leading-[1.15]">
           统计范围：2023-01-20-2025-01-31
@@ -451,15 +482,25 @@ function HeaderBar() {
 // Left agent sidebar
 // ─────────────────────────────────────────────────────────────────────────────
 
-function AgentSidebar() {
+function AgentSidebar({
+  activeIndex,
+  onSelect,
+}: {
+  activeIndex: number;
+  onSelect: (i: number) => void;
+}) {
   const agents = ['售后索赔专家', '质量预警专家', '过程分析专家', '参数推荐专家'];
+  const subItems = [
+    { label: '• 代号001', sub: '@售后数据科学项目' },
+    { label: '• 代号002', sub: '@质量预警数据项目' },
+  ];
+
   return (
     <div className="shrink-0 w-[172px] h-full border-r border-[#ededed] px-2 py-4 overflow-y-auto">
       {agents.map((a, i) => (
         <div key={a}>
-          <div
-            className={`flex items-center gap-4 px-2 py-[6px] rounded-lg ${i === 0 ? 'bg-[#f3f3f3]' : ''}`}
-          >
+          {/* Agent 名称行 — 纯展示，无点击 */}
+          <div className="flex items-center gap-4 px-2 py-[6px] rounded-lg">
             <span className="flex-1 text-[14px] text-[#0f0f0f] leading-[20px] truncate">
               {a}
             </span>
@@ -467,11 +508,27 @@ function AgentSidebar() {
               <path d="M6 4l4 4-4 4" stroke="#141515" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </div>
-          {i === 0 && (
+
+          {/* 子项 tab — 仅前两个有，点击切换 */}
+          {i < 2 && (
             <div className="ml-2 pl-4 py-[3px]">
-              <div className="bg-[#e2e2e2] rounded px-2 py-1">
-                <span className="text-[13px] text-[#383838]" style={{ fontWeight: 500 }}>• 代号001</span>
-                <p className="text-[11px] text-[#999] tracking-[0.88px] uppercase mt-0.5">@售后数据科学项目</p>
+              <div
+                onClick={() => onSelect(i)}
+                className={`rounded px-2 py-[6px] cursor-pointer transition-colors select-none ${
+                  activeIndex === i
+                    ? 'bg-[#e2e2e2]'
+                    : 'hover:bg-[#f3f3f3]'
+                }`}
+              >
+                <span
+                  className="text-[13px] text-[#383838]"
+                  style={{ fontWeight: 500 }}
+                >
+                  {subItems[i].label}
+                </span>
+                <p className="text-[11px] text-[#999] tracking-[0.88px] uppercase mt-0.5">
+                  {subItems[i].sub}
+                </p>
               </div>
             </div>
           )}
@@ -493,12 +550,13 @@ const STATUS_STYLE: Record<WOStatus, { bg: string; text: string; border: string 
 };
 
 function WOCard({
-  id, desc, reason, vin, date, status, currentTask, active,
+  id, reason, vin, amount, date, status, currentTask, active, agentType,
 }: {
-  id: string; desc: string; reason: string; vin: string; date: string;
-  status: WOStatus; currentTask: string; active?: boolean;
+  id: string; reason: string; vin: string; amount?: string; date: string;
+  status: WOStatus; currentTask: string; active?: boolean; agentType?: 'aftersales' | 'quality';
 }) {
   const s = STATUS_STYLE[status];
+  const isQuality = agentType === 'quality';
   return (
     <div
       className={`relative rounded p-3 flex flex-col gap-2 ${active ? 'bg-[#e7f0ff]' : 'bg-[#fbfbfb]'}`}
@@ -516,10 +574,10 @@ function WOCard({
         </span>
       </div>
       <div className="flex flex-col gap-1">
-        <p className="text-[11px] text-[#383838]">失效现象：{desc}</p>
-        <p className="text-[11px] text-[#383838]">失效车辆：{vin}</p>
+        <p className="text-[11px] text-[#383838]">{isQuality ? '失效车辆' : '索赔车辆'}：{vin}</p>
+        {!isQuality && amount && <p className="text-[11px] text-[#383838]">索赔金额：{amount}</p>}
         <div className="flex text-[11px] text-[#383838]">
-          <span className="flex-1">失效原因：{reason}</span>
+          <span className="flex-1">{isQuality ? '失效原因' : '索赔原因'}：{reason}</span>
           <span>{date}</span>
         </div>
         <div className="flex items-center gap-1 text-[11px]">
@@ -534,15 +592,19 @@ function WOCard({
   );
 }
 
-function WOListPanel({ step }: { step: number }) {
-  const taskName = WO_TASK_MAP[step];
+function WOListPanel({ step, agentType }: { step: number; agentType: 'aftersales' | 'quality' }) {
+  const woTaskMap = agentType === 'quality' ? QUALITY_WO_TASK_MAP : AFTERSALES_WO_TASK_MAP;
+  const taskName = woTaskMap[step];
   const [collapsed, setCollapsed] = useState(false);
 
-  // ── 25 条模拟数据 ──
-  const ALL_WO_DATA = [
-    { id: 'WO-2026-001', desc: '电驱绝缘异常',  vin: 'LSJA24U39EA00101',  reason: '绝缘异常',  date: '2026-01-07', status: '进行中', currentTask: taskName,        active: true  },
-
+  // ── 模拟数据 ──
+  const AFTERSALES_WO_DATA = [
+    { id: 'WO-2026-001', vin: 'LSJA24U39EA00101', amount: '¥12,800', reason: '绝缘异常', date: '2026-01-07', status: '进行中' as WOStatus, currentTask: taskName, active: true },
   ];
+  const QUALITY_WO_DATA = [
+    { id: 'QW-2026-008', vin: 'LSJA24U39EA00208', reason: '电磁阀异常', date: '2026-02-14', status: '进行中' as WOStatus, currentTask: taskName, active: true },
+  ];
+  const ALL_WO_DATA = agentType === 'quality' ? QUALITY_WO_DATA : AFTERSALES_WO_DATA;
 
   const PAGE_SIZE = 20;
   const [page, setPage] = useState(1);
@@ -634,12 +696,14 @@ function WOListPanel({ step }: { step: number }) {
           <WOCard
             key={wo.id}
             id={wo.id}
-            desc={wo.desc}
-            count={wo.count}
+            reason={wo.reason}
+            vin={wo.vin}
+            amount={(wo as any).amount}
             date={wo.date}
             status={wo.status}
             currentTask={wo.currentTask}
             active={wo.active}
+            agentType={agentType}
           />
         ))}
         {/* 懒加载骨架屏 */}
@@ -682,11 +746,17 @@ function WOListPanel({ step }: { step: number }) {
 // Progress header
 // ─────────────────────────────────────────────────────────────────────────────
 
-function ProgressHeader({ step }: { step: number }) {
-  const taskStep = TASK_ACTIVE_MAP[step];
-  const progressLabel = PROGRESS_LABEL_MAP[step];
+function ProgressHeader({ step, agentType }: { step: number; agentType: 'aftersales' | 'quality' }) {
+  const isQuality = agentType === 'quality';
+  const taskActiveMap = isQuality ? QUALITY_TASK_ACTIVE_MAP : AFTERSALES_TASK_ACTIVE_MAP;
+  const progressLabelMap = isQuality ? QUALITY_PROGRESS_LABEL_MAP : AFTERSALES_PROGRESS_LABEL_MAP;
+  const taskStep = taskActiveMap[step];
+  const progressLabel = progressLabelMap[step];
   const barMax = 248;
-  const barFill = Math.round(barMax * (taskStep + 1) / 5);
+  const taskTotal = 4;
+  const barFill = Math.round(barMax * (taskStep + 1) / taskTotal);
+  const woId = isQuality ? 'QW-2026-008' : 'WO-2026-001';
+  const progressTotal = String(taskTotal).padStart(2, '0');
 
   return (
     <div className="shrink-0 h-[104px] border-b border-[#ededed] bg-white flex items-center gap-4 px-6">
@@ -702,16 +772,16 @@ function ProgressHeader({ step }: { step: number }) {
       {/* text */}
       <div className="flex flex-col gap-[6px] flex-1 min-w-0">
         <p className="text-[#0f0f0f] text-[16px] leading-[1.5] tracking-[-0.08px]" style={{ fontWeight: 500 }}>
-          WO-2026-001
+          {woId}
         </p>
         <p className="text-[#383838] text-[12px] leading-[1.6] tracking-[-0.06px]">
           连小山正在实时跟进，当前已规划{' '}
-          <span className="text-[#48669c]" style={{ fontWeight: 500 }}>5</span>
+          <span className="text-[#48669c]" style={{ fontWeight: 500 }}>4</span>
           {' '}个任务
         </p>
         <div className="flex items-center gap-[10px]">
           <span className="text-[#48669c] text-[11px]">
-            当前进度 {progressLabel}/05
+            当前进度 {progressLabel}/{progressTotal}
           </span>
           {/* progress bar */}
           <div className="relative h-[6px] rounded-full overflow-hidden" style={{ width: barMax }}>
@@ -731,8 +801,11 @@ function ProgressHeader({ step }: { step: number }) {
 // Task list panel
 // ─────────────────────────────────────────────────────────────────────────────
 
-function TaskList({ step }: { step: number }) {
-  const taskActiveIndex = TASK_ACTIVE_MAP[step];
+function TaskList({ step, agentType }: { step: number; agentType: 'aftersales' | 'quality' }) {
+  const isQuality = agentType === 'quality';
+  const tasks = isQuality ? QUALITY_TASKS : AFTERSALES_TASKS;
+  const taskActiveMap = isQuality ? QUALITY_TASK_ACTIVE_MAP : AFTERSALES_TASK_ACTIVE_MAP;
+  const taskActiveIndex = taskActiveMap[step];
   return (
     <div className="shrink-0 w-[532px] h-full bg-white border-r border-[#ededed] overflow-y-auto">
       <div className="px-4 py-3">
@@ -742,7 +815,7 @@ function TaskList({ step }: { step: number }) {
         {/* vertical timeline base line */}
         <div className="absolute top-0 bottom-0 w-px bg-[rgba(72,102,156,0.15)]" style={{ left: 22 }} />
 
-        {TASKS.map((task, i) => {
+        {tasks.map((task, i) => {
           const isA2A = i === 1 || i === 2;
           const isDone = i < taskActiveIndex;
           const isRunning = i === taskActiveIndex;
@@ -865,7 +938,8 @@ function TaskList({ step }: { step: number }) {
 // Step button overlay
 // ───────────────────────────────────���─────────────────────────────────────────
 
-function StepButton({ step, total, onNext }: { step: number; total: number; onNext: () => void }) {
+function StepButton({ step, total, onNext, agentType }: { step: number; total: number; onNext: () => void; agentType: 'aftersales' | 'quality' }) {
+  const stepLabels = agentType === 'quality' ? QUALITY_STEP_LABELS : AFTERSALES_STEP_LABELS;
   const isLast = step === total - 1;
   return (
     <div className="absolute top-[10px] right-[10px] z-50 flex items-center gap-[6px]">
@@ -914,10 +988,10 @@ function StepButton({ step, total, onNext }: { step: number; total: number; onNe
         style={{ background: 'rgba(34,37,44,0.82)', backdropFilter: 'blur(4px)' }}
       >
         <span className="text-white text-[10px]" style={{ opacity: 0.6 }}>
-          步骤 {step + 1}/7 ·{' '}
+          步骤 {step + 1}/{total} ·{' '}
         </span>
         <span className="text-white text-[10px]">
-          {STEP_LABELS[step]}
+          {stepLabels[step]}
         </span>
       </div>
     </div>
@@ -929,10 +1003,25 @@ function StepButton({ step, total, onNext }: { step: number; total: number; onNe
 // ─────────────────────────────────────────────────────────────────────────────
 
 export default function App() {
-  const [step, setStep] = useState(0);
+  const [agentIndex, setAgentIndex] = useState(0);
+  const [afterSalesStep, setAfterSalesStep] = useState(0);
+  const [qualityStep, setQualityStep] = useState(0);
   const total = 7;
 
-  const handleNext = () => setStep((s) => (s < total - 1 ? s + 1 : 0));
+  const agentType: 'aftersales' | 'quality' = agentIndex === 1 ? 'quality' : 'aftersales';
+  const totalSteps = 6;
+  const step = agentType === 'quality' ? qualityStep : afterSalesStep;
+  const handleNext = () => {
+    if (agentType === 'quality') {
+      setQualityStep((s: number) => (s < totalSteps - 1 ? s + 1 : 0));
+    } else {
+      setAfterSalesStep((s: number) => (s < totalSteps - 1 ? s + 1 : 0));
+    }
+  };
+
+  const notifyText = agentType === 'quality'
+    ? <p className="text-[12px] text-[#9c7240]">连小山持续从{' '}<strong className="font-bold text-[#9c7240]">质量预警库</strong>{' '}感知事件中…</p>
+    : <p className="text-[12px] text-[#9c7240]">连小山持续从{' '}<strong className="font-bold text-[#9c7240]">连山工单库</strong>{' '}感知事件中…</p>;
 
   return (
     <div
@@ -948,7 +1037,7 @@ export default function App() {
 
         {/* Body */}
         <div className="flex flex-1 min-h-0 overflow-hidden">
-          <AgentSidebar />
+          <AgentSidebar activeIndex={agentIndex} onSelect={setAgentIndex} />
 
           {/* Right work area — scroll-snap container */}
           <div
@@ -957,7 +1046,7 @@ export default function App() {
           >
             {/* ── Snap point 0: OKR ── */}
             <div className="shrink-0 w-full" style={{ scrollSnapAlign: 'start' }}>
-              <OKRSection />
+              <OKRSection agentType={agentType} />
             </div>
 
             {/* ── Snap point 1: notification bar + main work area ── */}
@@ -965,28 +1054,24 @@ export default function App() {
               className="flex flex-col shrink-0 w-full overflow-hidden"
               style={{ scrollSnapAlign: 'start', height: '100%' }}
             >
-              {/* Agent notification bar — top of work area, does not scroll with OKR */}
+              {/* Agent notification bar */}
               <div className="bg-[rgba(206,164,114,0.16)] border-b border-[#ededed] px-5 py-2 shrink-0">
-                <p className="text-[12px] text-[#9c7240]">
-                  连小山持续从{' '}
-                  <strong className="font-bold text-[#9c7240]">连山工单库</strong>
-                  {' '}感知事件中…
-                </p>
+                {notifyText}
               </div>
 
               {/* Content row */}
               <div className="flex flex-1 min-h-0 overflow-hidden">
-                <WOListPanel step={step} />
+                <WOListPanel step={step} agentType={agentType} />
 
                 {/* Task + Chat column */}
                 <div className="flex flex-col flex-1 min-w-0 h-full overflow-hidden">
-                  <ProgressHeader step={step} />
+                  <ProgressHeader step={step} agentType={agentType} />
 
                   {/* Task list + Chat side by side */}
                   <div className="flex flex-1 min-h-0 overflow-hidden">
-                    <TaskList step={step} />
+                    <TaskList step={step} agentType={agentType} />
                     <div className="flex-1 min-w-0 h-full overflow-hidden">
-                      <AgentChatPanel step={step} />
+                      <AgentChatPanel step={step} agentType={agentType} />
                     </div>
                   </div>
                 </div>
@@ -997,7 +1082,7 @@ export default function App() {
       </div>
 
       {/* Floating step button */}
-      <StepButton step={step} total={total} onNext={handleNext} />
+      <StepButton step={step} total={totalSteps} onNext={handleNext} agentType={agentType} />
     </div>
   );
 }
