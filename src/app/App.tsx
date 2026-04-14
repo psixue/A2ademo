@@ -5,23 +5,25 @@ import imgFlow from 'figma:asset/540a8d44e219ebf1016269b72e2d87d0a1e8d118.png';
 import imgWangYi from 'figma:asset/b5c611a6acf5d0300f5ea2cd4d0cc83c09723f19.png';
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Static data — 售后索赔专家
+// Static data — 智能理赔Agent
 // ─────────────────────────────────────────────────────────────────────────────
 
 const AFTERSALES_TASKS = [
   { id: 1, name: '索赔单生成', assignees: ['连小山'] },
-  { id: 2, name: '将索赔单发送给汇川Agent', assignees: ['连小山', '汇川Agent'] },
-  { id: 3, name: '从汇川Agent获取反馈数据', assignees: ['连小山', '汇川Agent'] },
-  { id: 4, name: '预警闭环确认', assignees: ['王一'] },
+  { id: 2, name: 'PTC审核索赔单', assignees: ['王一'] },
+  { id: 3, name: '将索赔单发送给汇川Agent', assignees: ['连小山', '汇川Agent'] },
+  { id: 4, name: '从汇川Agent获取反馈数据', assignees: ['连小山', '汇川Agent'] },
+  { id: 5, name: '预警闭环确认', assignees: ['王一'] },
 ];
 
 // Keep TASKS as alias for backward compat with AgentChatPanel
 const TASKS = AFTERSALES_TASKS;
 
-const AFTERSALES_TASK_ACTIVE_MAP = [0, 1, 2, 2, 3, 4];
-const AFTERSALES_PROGRESS_LABEL_MAP = ['01', '02', '03', '03', '04', '04'];
+const AFTERSALES_TASK_ACTIVE_MAP = [0, 1, 2, 3, 3, 4, 5];
+const AFTERSALES_PROGRESS_LABEL_MAP = ['01', '02', '03', '04', '04', '05', '05'];
 const AFTERSALES_WO_TASK_MAP = [
   '索赔单生成',
+  'PTC审核索赔单',
   '将索赔单...',
   '从汇川Agent...',
   '从汇川Agent...',
@@ -30,6 +32,7 @@ const AFTERSALES_WO_TASK_MAP = [
 ];
 const AFTERSALES_STEP_LABELS = [
   '索赔单生成',
+  'PTC审核索赔单',
   '发送索赔单给汇川Agent',
   '发送索赔单(汇川已响应)',
   '获取汇川Agent反馈数据',
@@ -38,32 +41,34 @@ const AFTERSALES_STEP_LABELS = [
 ];
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Static data — 质量预警专家
+// Static data — 售后质量Agent
 // ─────────────────────────────────────────────────────────────────────────────
 
 const QUALITY_TASKS = [
-  { id: 1, name: '故障工况分析', assignees: ['连小山'] },
-  { id: 2, name: '将预警结论发送给汇川Agent', assignees: ['连小山', '汇川Agent'] },
-  { id: 3, name: '从汇川Agent获取零件数据', assignees: ['连小山', '汇川Agent'] },
-  { id: 4, name: '预警闭环确认', assignees: ['王一'] },
+  { id: 1, name: '数据感知-【异常工况】', assignees: ['连小山'] },
+  { id: 2, name: '故障分析-【故障树】', assignees: ['连小山'] },
+  { id: 3, name: '生成报告', assignees: ['连小山'] },
+  { id: 4, name: '风险问题预警', assignees: ['连小山', '汇川Agent'] },
+  { id: 5, name: '预警结果确认', assignees: ['连小山', '汇川Agent'] },
+  { id: 6, name: '预警闭环确认', assignees: ['王一'] },
 ];
 
-const QUALITY_TASK_ACTIVE_MAP = [0, 1, 2, 2, 3, 4];
+const QUALITY_TASK_ACTIVE_MAP = [0, 3, 4, 4, 5, 6];
 const QUALITY_PROGRESS_LABEL_MAP = ['01', '02', '03', '03', '04', '04'];
 const QUALITY_WO_TASK_MAP = [
-  '故障工况分析',
-  '将预警...',
-  '从汇川Agent...',
-  '从汇川Agent...',
+  '数据感知-【异常工况】',
+  '风险问题预警...',
+  '预警结果确认...',
+  '预警结果确认...',
   '预警闭环确认',
   '预警闭环确认',
 ];
 const QUALITY_STEP_LABELS = [
-  '故障工况分析',
-  '发送预警结论给汇川Agent',
-  '发送结论(汇川已响应)',
-  '获取汇川Agent零件数据',
-  '预警闭环确认',
+  '数据感知-【异常工况】',
+  '故障分析+生成报告',
+  '风险问题预警',
+  '风险预警(汇川已响应)',
+  '预警结果确认',
   '预警闭环完成',
 ];
 
@@ -489,7 +494,7 @@ function AgentSidebar({
   activeIndex: number;
   onSelect: (i: number) => void;
 }) {
-  const agents = ['售后索赔专家', '质量预警专家', '过程分析专家', '参数推荐专家'];
+  const agents = ['智能索赔Agent', '售后质量Agent', '过程分析专家', '参数推荐专家'];
   const subItems = [
     { label: '• 代号001', sub: '@售后数据科学项目' },
     { label: '• 代号002', sub: '@质量预警数据项目' },
@@ -753,7 +758,7 @@ function ProgressHeader({ step, agentType }: { step: number; agentType: 'aftersa
   const taskStep = taskActiveMap[step];
   const progressLabel = progressLabelMap[step];
   const barMax = 248;
-  const taskTotal = 4;
+  const taskTotal = isQuality ? QUALITY_TASKS.length : AFTERSALES_TASKS.length;
   const barFill = Math.round(barMax * (taskStep + 1) / taskTotal);
   const woId = isQuality ? 'QW-2026-008' : 'WO-2026-001';
   const progressTotal = String(taskTotal).padStart(2, '0');
@@ -776,7 +781,7 @@ function ProgressHeader({ step, agentType }: { step: number; agentType: 'aftersa
         </p>
         <p className="text-[#383838] text-[12px] leading-[1.6] tracking-[-0.06px]">
           连小山正在实时跟进，当前已规划{' '}
-          <span className="text-[#48669c]" style={{ fontWeight: 500 }}>4</span>
+          <span className="text-[#48669c]" style={{ fontWeight: 500 }}>{taskTotal}</span>
           {' '}个任务
         </p>
         <div className="flex items-center gap-[10px]">
@@ -816,7 +821,7 @@ function TaskList({ step, agentType }: { step: number; agentType: 'aftersales' |
         <div className="absolute top-0 bottom-0 w-px bg-[rgba(72,102,156,0.15)]" style={{ left: 22 }} />
 
         {tasks.map((task, i) => {
-          const isA2A = i === 1 || i === 2;
+          const isA2A = task.assignees.includes('汇川Agent');
           const isDone = i < taskActiveIndex;
           const isRunning = i === taskActiveIndex;
           const isWaiting = i > taskActiveIndex;
@@ -1009,7 +1014,7 @@ export default function App() {
   const total = 7;
 
   const agentType: 'aftersales' | 'quality' = agentIndex === 1 ? 'quality' : 'aftersales';
-  const totalSteps = 6;
+  const totalSteps = agentType === 'quality' ? QUALITY_STEP_LABELS.length : AFTERSALES_STEP_LABELS.length;
   const step = agentType === 'quality' ? qualityStep : afterSalesStep;
   const handleNext = () => {
     if (agentType === 'quality') {
@@ -1071,7 +1076,7 @@ export default function App() {
                   <div className="flex flex-1 min-h-0 overflow-hidden">
                     <TaskList step={step} agentType={agentType} />
                     <div className="flex-1 min-w-0 h-full overflow-hidden">
-                      <AgentChatPanel step={step} agentType={agentType} />
+                      <AgentChatPanel step={step} agentType={agentType} onStepAdvance={handleNext} />
                     </div>
                   </div>
                 </div>

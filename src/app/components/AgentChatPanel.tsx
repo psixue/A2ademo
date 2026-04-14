@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import imgFlow from "figma:asset/540a8d44e219ebf1016269b72e2d87d0a1e8d118.png";
+import imgWangYi from "figma:asset/b5c611a6acf5d0300f5ea2cd4d0cc83c09723f19.png";
 import BoshiFrame from "../../imports/Frame";
 import Group1321320046 from "../../imports/Group1321320046";
 import { ReassignModal } from "./ReassignModal";
@@ -608,7 +609,7 @@ function Msg1({
   agentType,
 }: MsgProps & { agentType?: string }) {
   const isQuality = agentType === "quality";
-  const title = isQuality ? "故障工况分析" : "索赔单生成";
+  const title = isQuality ? "数据感知-【异常工况】" : "索赔单生成";
 
   return (
     <div className="flex gap-2 items-start pt-1">
@@ -622,9 +623,9 @@ function Msg1({
                 <div className="flex flex-col gap-[6px]">
                   <div className="grid grid-cols-[auto_1fr] gap-x-[8px] gap-y-[3px] text-[12px] leading-[1.6]">
                     <span className="text-[#999] shrink-0">预警类型：</span>
-                    <span className="text-[#171717]">电驱绝缘异常</span>
+                    <span className="text-[#171717]">双电控绝缘异常</span>
                     <span className="text-[#999] shrink-0">失效原因：</span>
-                    <span className="text-[#383838]">绝缘异常</span>
+                    <span className="text-[#383838]">非充电工况，绝缘阻值异常</span>
                     <span className="text-[#999] shrink-0">车辆VIN：</span>
                     <span className="text-[#383838]">LSJA24U39RA000101</span>
                     <span className="text-[#999] shrink-0">失效时间：</span>
@@ -640,12 +641,19 @@ function Msg1({
                   <div className="border-t border-dashed border-[#e2e2e2] pt-[6px]">
                     <p className="text-[#999] text-[12px] mb-[4px]">失效描述：</p>
                     <p className="text-[#383838] text-[12px] leading-[1.6]">
-                      车辆行驶中绝缘监测系统报出绝缘失效故障码，绝缘阻值持续低于安全阈值。回溯数据显示失效前已出现绝缘阻值偏低预警工况。
+                      车辆行驶中绝缘监测系统报出绝缘阻值持续偏低现象，回溯数据显示失效前已出现绝缘阻值偏低，绝缘阻值波动频繁预警工况。
                     </p>
+                  </div>
+                  <div className="border-t border-dashed border-[#e2e2e2] pt-[6px]">
+                    <img
+                      src="https://raw.githubusercontent.com/psixue/FigmaForA2A/refs/heads/main/%E7%BB%9D%E7%BC%98%E9%98%BB%E5%80%BC.png"
+                      alt="信号分析图"
+                      className="w-full rounded-[4px]"
+                    />
                   </div>
                 </div>
               </GrayBlock>
-              <ViewReportBtn href="https://lianshan.chehejia.com/hd/tool/work_condition_restoration?vin=LW433B129N1041855&fault_time=1775699500&idtc_id=27&idtc_cause_id=X01_airbag_RRress_high_AirbegWrnngLamp_x&fault_tree_version=94&signals=UTCTime,LowVolPwrMd,VehSpd,VehicleChrgSts,EnSts,XCU_DTC4_Num,ACU_DTC4_Num,WarningInfo_MSG_AirbegWrnngLampSts,XCU_DTC3_Num,ACU_DTC2_Num,XCU_DTC1_Num,veh_series,XCU_DTC2_Num,ACU_DTC3_Num,ACU_DTC1_Num" />
+              <ViewReportBtn href="https://www.baidu.com" />
             </>
           ) : (
             <GrayBlock>
@@ -721,6 +729,224 @@ function Msg1({
   );
 }
 
+function Msg1b() {
+  return (
+    <div className="flex gap-2 items-start pt-1">
+      <LxsAvatar />
+      <div className="flex flex-col gap-[6px] flex-1 min-w-0 overflow-hidden">
+        <SenderRow name="连小山" time="10:31" />
+        <WhiteCard title="故障分析-【故障树】">
+          <div className="text-[12px] text-[#383838] leading-[1.6]">
+            <span className="text-[#48669c] font-medium">@连小山 </span>
+            识别失效原因为，非充电工况绝缘阻值异常
+          </div>
+          <GrayBlock>
+            <div className="flex flex-col gap-[6px]">
+              <div className="border-b border-dashed border-[#e2e2e2] pb-[6px]">
+                <img
+                  src="https://raw.githubusercontent.com/psixue/FigmaForA2A/refs/heads/main/%E6%B1%87%E5%B7%9D%E6%95%85%E9%9A%9C%E6%A0%91.png"
+                  alt="故障树分析图"
+                  className="w-full rounded-[4px]"
+                />
+              </div>
+              <div className="grid grid-cols-[auto_1fr] gap-x-[8px] gap-y-[4px] text-[12px] leading-[1.6]">
+                <span className="text-[#999] shrink-0">风险等级：</span>
+                <span className="text-[#383838]">非安抛</span>
+                <span className="text-[#999] shrink-0">推荐措施：</span>
+                <span className="text-[#383838]">邀约用户进店，检查高压回路零部件绝缘阻值，更换零件</span>
+                <span className="text-[#999] shrink-0">诊断路径：</span>
+                <span className="text-[#383838]">动力电池性能衰减 → 绝缘故障 → 非充电工况，绝缘阻值异常</span>
+                <span className="text-[#999] shrink-0">失效原因：</span>
+                <span className="text-[#383838]">非充电工况绝缘阻值异常</span>
+              </div>
+            </div>
+          </GrayBlock>
+        </WhiteCard>
+      </div>
+    </div>
+  );
+}
+
+function MsgPtc({ canAnnotate, onAnnotate, canReassign, onOpenReassign, onStepAdvance }: MsgProps & { onStepAdvance?: () => void }) {
+  const [selected, setSelected] = useState<"accurate" | "false_alarm" | null>("accurate");
+
+  return (
+    <div className="flex gap-2 items-start pt-1">
+      <LxsAvatar />
+      <div className="flex flex-col gap-[6px] flex-1 min-w-0 overflow-hidden">
+        <SenderRow name="连小山" time="10:35" />
+        <WhiteCard title="PTC审核索赔单">
+          <YellowBadge>
+            <span className="text-[#48669c]">@连小山</span>
+            <span className="text-[#cb802b]"> 请求 </span>
+            <span className="text-[#48669c]">@王一</span>
+            <span className="text-[#cb802b]"> 协助排查</span>
+          </YellowBadge>
+          <GrayBlock>
+            <div className="flex flex-col gap-[6px]">
+              <div className="grid grid-cols-[auto_1fr] gap-x-[8px] gap-y-[3px] text-[12px] leading-[1.6]">
+                <span className="text-[#999] shrink-0">审核类型：</span>
+                <span className="text-[#171717]">索赔准确性审核</span>
+                <span className="text-[#999] shrink-0">审核人：</span>
+                <span className="text-[#383838]">王一</span>
+                <span className="text-[#999] shrink-0">审核时间：</span>
+                <span className="text-[#383838]">2026-03-29 11:10:00</span>
+              </div>
+            </div>
+          </GrayBlock>
+          <div className="flex flex-col gap-[6px] w-full">
+            <p className="text-[#383838] text-[12px] leading-[1.6] tracking-[-0.06px]">
+              请确认索赔单审核结论
+            </p>
+            <div className="flex gap-[16px]">
+              <label className="flex items-center gap-[6px] cursor-pointer">
+                <div
+                  className="shrink-0 w-[14px] h-[14px] rounded-full border-2 border-[#d1d1d1] flex items-center justify-center bg-white"
+                  onClick={() => setSelected("accurate")}
+                >
+                  {selected === "accurate" && (
+                    <div className="w-[6px] h-[6px] rounded-full bg-[#383838]" />
+                  )}
+                </div>
+                <span className="text-[12px] text-[#383838]" onClick={() => setSelected("accurate")}>准确 · 进入A2A流程</span>
+              </label>
+              <label className="flex items-center gap-[6px] cursor-pointer">
+                <div
+                  className="shrink-0 w-[14px] h-[14px] rounded-full border-2 border-[#d1d1d1] flex items-center justify-center bg-white"
+                  onClick={() => setSelected("false_alarm")}
+                >
+                  {selected === "false_alarm" && (
+                    <div className="w-[6px] h-[6px] rounded-full bg-[#383838]" />
+                  )}
+                </div>
+                <span className="text-[12px] text-[#383838]" onClick={() => setSelected("false_alarm")}>误报 · 终止流程</span>
+              </label>
+            </div>
+            {selected && (
+              <p className="text-[11px] leading-[1.6] px-[2px] text-[#666]">
+                {selected === "accurate"
+                  ? "索赔信息与检测数据一致，双电机控制器绝缘阻值不合格已确认，非误报，批准进入汇川Agent审核环节。"
+                  : "索赔信息存疑，与检测数据不符，判定为误报，终止本次索赔流程。"}
+              </p>
+            )}
+            <div className="flex gap-2 justify-end">
+              <button
+                onClick={() => setSelected(null)}
+                className="border border-[#e2e2e2] rounded-[5px] px-4 py-[5px] text-[12px] text-[#383838] bg-white hover:bg-gray-50"
+              >
+                重置
+              </button>
+              <button
+                onClick={() => { if (selected) onStepAdvance?.(); }}
+                className="rounded-[5px] px-4 py-[5px] text-[12px] text-white bg-[#48669c] hover:bg-[#3b5888]"
+              >
+                标注
+              </button>
+            </div>
+          </div>
+          <Divider />
+          <TimestampFooter seconds="0.674s" />
+          <ActionRow
+            canAnnotate={canAnnotate}
+            onAnnotate={onAnnotate}
+            canReassign={canReassign}
+            onOpenReassign={onOpenReassign}
+          />
+        </WhiteCard>
+      </div>
+    </div>
+  );
+}
+
+function MsgPtcReply() {
+  return (
+    <div className="flex gap-2 items-start pt-1">
+      <div className="relative shrink-0 w-8 h-[29px] overflow-clip">
+        <img alt="王一" src={imgWangYi} className="absolute max-w-none object-cover pointer-events-none" style={{ width: 43.758, height: 40.44, left: -5.88, top: -5.43 }} />
+      </div>
+      <div className="flex flex-col gap-[6px] flex-1 min-w-0 overflow-hidden">
+        <SenderRow name="王一" time="10:38" />
+        <BlueCard title="PTC审核索赔单">
+          <div className="rounded p-2 w-full" style={{ background: "rgba(255,255,255,0.5)" }}>
+            <p className="text-[#7c7c7c] text-[12px] leading-[1.6] tracking-[-0.06px]">
+              已完成索赔单审核，结论：准确，索赔信息与现场检测数据一致，已批准进入A2A处理流程。
+            </p>
+          </div>
+        </BlueCard>
+      </div>
+    </div>
+  );
+}
+
+
+function MsgReport({ canAnnotate, onAnnotate, canReassign, onOpenReassign }: MsgProps) {
+  return (
+    <div className="flex gap-2 items-start pt-1">
+      <LxsAvatar />
+      <div className="flex flex-col gap-[6px] flex-1 min-w-0 overflow-hidden">
+        <SenderRow name="连小山" time="10:41" />
+        <WhiteCard title="生成报告">
+          <div className="text-[12px] text-[#383838] leading-[1.6]">
+            <span className="text-[#48669c] font-medium">@连小山 </span>
+            识别失效原因为，非充电工况绝缘阻值异常
+          </div>
+          <GrayBlock>
+            <div className="flex flex-col gap-[10px]">
+              <div>
+                <div className="flex items-center gap-[5px] mb-[5px]">
+                  <span className="text-[12px]">🔍</span>
+                  <span className="text-[#383838] text-[12px] font-medium">推荐措施</span>
+                </div>
+                <div className="bg-white border border-[#e8e8e8] rounded px-[10px] py-[6px] text-[12px] text-[#383838]">
+                  邀约用户进店，检查高压回路零部件绝缘阻值，更换零件
+                </div>
+              </div>
+              <div>
+                <div className="flex items-center gap-[5px] mb-[5px]">
+                  <span className="text-[12px]">⚡</span>
+                  <span className="text-[#383838] text-[12px] font-medium">诊断原因</span>
+                </div>
+                <div className="bg-white border border-[#e8e8e8] rounded px-[10px] py-[6px] text-[12px] text-[#383838]">
+                  非充电工况绝缘阻值异常
+                </div>
+              </div>
+              <div>
+                <div className="flex items-center gap-[5px] mb-[5px]">
+                  <span className="text-[12px]">🚀</span>
+                  <span className="text-[#383838] text-[12px] font-medium">诊断路径</span>
+                </div>
+                <div className="bg-white border border-[#e8e8e8] rounded px-[10px] py-[6px] text-[12px] text-[#383838]">
+                  动力电池性能衰减 → 绝缘故障 → 非充电工况，绝缘阻值异常
+                </div>
+              </div>
+            </div>
+          </GrayBlock>
+          <div className="flex gap-2">
+            <button className="flex-1 rounded-[4px] py-[7px] text-[12px] text-[#48669c] border border-[#48669c] bg-white hover:bg-[#f0f4ff]">
+              正确
+            </button>
+            <button className="flex-1 rounded-[4px] py-[7px] text-[12px] text-[#e03636] border border-[#e03636] bg-white hover:bg-[#fff0f0]">
+              误报
+            </button>
+          </div>
+          <button className="w-full rounded-[4px] py-[7px] text-[12px] text-[#999] border border-[#e2e2e2] bg-white hover:bg-gray-50">
+            查看诊断报告
+          </button>
+          <Divider />
+          <TimestampFooter seconds="0.026s" />
+          <ActionRow
+            canAnnotate={canAnnotate}
+            onAnnotate={onAnnotate}
+            canReassign={canReassign}
+            onOpenReassign={onOpenReassign}
+          />
+        </WhiteCard>
+      </div>
+    </div>
+  );
+}
+
+
 function Msg2Running({
   canAnnotate,
   onAnnotate,
@@ -735,7 +961,7 @@ function Msg2Running({
       <LxsAvatar />
       <div className="flex flex-col gap-[6px] flex-1 min-w-0 overflow-hidden">
         <SenderRow name="连小山" time="10:28" />
-        <WhiteCard title={isQuality ? "将预警结论发送给汇川Agent" : "将索赔单发送给汇川Agent"} isA2A>
+        <WhiteCard title={isQuality ? "风险问题预警" : "将索赔单发送给汇川Agent"} isA2A>
           <YellowBadge>
             <span className="text-[#48669c]">@连小山</span>
             <span className="text-[#cb802b]">请求 </span>
@@ -776,7 +1002,7 @@ function Msg2({
       <LxsAvatar />
       <div className="flex flex-col gap-[6px] flex-1 min-w-0 overflow-hidden">
         <SenderRow name="连小山" time="10:28" />
-        <WhiteCard title={isQuality ? "将预警结论发送给汇川Agent" : "将索赔单发送给汇川Agent"} isA2A>
+        <WhiteCard title={isQuality ? "风险问题预警" : "将索赔单发送给汇川Agent"} isA2A>
           <YellowBadge>
             <span className="text-[#48669c]">@{assignee}</span>
             <span className="text-[#cb802b]">已完成任务</span>
@@ -811,7 +1037,7 @@ function Msg3({ assignee, agentType }: MsgProps & { agentType?: string }) {
           name={assignee ?? "汇川Agent"}
           time="10:28"
         />
-        <BlueCard title={isQuality ? "将预警结论发送给汇川Agent" : "将索赔单发送给汇川Agent"} isA2A>
+        <BlueCard title={isQuality ? "风险问题预警" : "将索赔单发送给汇川Agent"} isA2A>
           <div
             className="rounded p-2 w-full"
             style={{ background: "rgba(255,255,255,0.5)" }}
@@ -842,7 +1068,7 @@ function Msg4Waiting({
       <LxsAvatar />
       <div className="flex flex-col gap-[6px] flex-1 min-w-0 overflow-hidden">
         <SenderRow name="连小山" time="10:28" />
-        <WhiteCard title={isQuality ? "从汇川Agent获取零件数据" : "从汇川Agent获取反馈数据"} isA2A>
+        <WhiteCard title={isQuality ? "预警结果确认" : "从汇川Agent获取反馈数据"} isA2A>
           <YellowBadge>
             <span className="text-[#48669c]">@连小山</span>
             <span className="text-[#cb802b]">请求</span>
@@ -882,7 +1108,7 @@ function Msg4Done({
       <LxsAvatar />
       <div className="flex flex-col gap-[6px] flex-1 min-w-0 overflow-hidden">
         <SenderRow name="连小山" time="10:28" />
-        <WhiteCard title={isQuality ? "从汇川Agent获取零件数据" : "从汇川Agent获取反馈数据"} isA2A>
+        <WhiteCard title={isQuality ? "预警结果确认" : "从汇川Agent获取反馈数据"} isA2A>
           <YellowBadge>
             <span className="text-[#48669c]">@{assignee}</span>
             <span className="text-[#cb802b]">已完成任务</span>
@@ -918,54 +1144,26 @@ function Msg5({ assignee, agentType }: MsgProps & { agentType?: string }) {
           name={assignee ?? "汇川Agent"}
           time="10:28"
         />
-        <BlueCard title="从汇川Agent获取反馈数据" isA2A>
+        <BlueCard title={isQuality ? "预警结果确认" : "从汇川Agent获取反馈数据"} isA2A>
           {isQuality ? (
             <div
               className="rounded p-2 w-full flex flex-col gap-[10px]"
               style={{ background: "rgba(255,255,255,0.5)" }}
             >
-              {/* 结论摘要 */}
-              <div className="grid grid-cols-[auto_1fr] gap-x-[8px] gap-y-[3px] text-[12px] leading-[1.6]">
-                <span className="text-[#999] shrink-0">分析结论：</span>
-                <span className="inline-flex items-center gap-[4px]">
-                  <span className="text-[#16794c] font-medium">预警准确</span>
-                  <span className="bg-[#f0fdf4] border border-[#bbf7d0] text-[#16794c] text-[10px] px-[5px] py-px rounded-full">✓ 确认</span>
-                </span>
-                <span className="text-[#999] shrink-0">根因：</span>
-                <span className="text-[#171717] font-medium">壳体压铸分层缺陷</span>
-                <span className="text-[#999] shrink-0">回复时间：</span>
-                <span className="text-[#383838]">2026-03-29 10:05:33</span>
+              <div className="text-[12px] text-[#383838] leading-[1.6]">
+                <span className="text-[#48669c] font-medium">@连小山 </span>
+                识别失效原因为铝皮飞边导致模具老化龟裂
               </div>
               <div className="border-t border-dashed border-[#e2e2e2]" />
-              <div>
-                <p className="text-[#999] text-[11px] mb-[4px]">失效机理</p>
-                <p className="text-[#383838] text-[12px] leading-[1.6]">
-                  模具老化龟裂，压铸过程中模具上端部分铝皮飞边等粘附于模具表面，卡在下端模具上；合模压铸时，铝皮与正常浇注的铝液温度不一致，未能完全融合，导致压铸件出现分层现象。
-                </p>
-              </div>
-              <div className="border-t border-dashed border-[#e2e2e2]" />
-              <div>
-                <p className="text-[#999] text-[11px] mb-[4px]">失效路径</p>
-                <div className="flex flex-col gap-[2px] text-[12px]">
-                  {["模具老化龟裂","铝皮飞边粘附模具表面","合模压铸时铝皮与铝液温差致未融合","壳体压铸件出现分层缺陷","壳体密封性下降，湿气渗入","绝缘材料受潮劣化","绝缘阻值降低，触发绝缘失效"].map((s, i) => (
-                    <div key={i} className="flex items-start gap-[4px]">
-                      <span className="text-[#cb802b] shrink-0 mt-px" style={{ paddingLeft: `${i * 8}px` }}>{i === 0 ? "⊙" : "↓"}</span>
-                      <span className="text-[#383838]">{s}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-              <div className="border-t border-dashed border-[#e2e2e2]" />
-              <div>
-                <p className="text-[#999] text-[11px] mb-[4px]">改善措施</p>
-                <div className="flex flex-col gap-[4px] text-[12px]">
-                  {["更换壳体供应商","增加X光探查，对压铸件内部分层/气孔等缺陷进行全检筛查"].map((item, i) => (
-                    <div key={i} className="flex gap-[6px] items-start">
-                      <span className="shrink-0 size-[16px] rounded-full bg-[#48669c] text-white text-[10px] flex items-center justify-center mt-[1px]">{i + 1}</span>
-                      <span className="text-[#383838]">{item}</span>
-                    </div>
-                  ))}
-                </div>
+              <div className="grid grid-cols-[auto_1fr] gap-x-[8px] gap-y-[4px] text-[12px] leading-[1.6]">
+                <span className="text-[#999] shrink-0">诊断原因：</span>
+                <span className="text-[#383838]">铝皮飞边导致模具老化龟裂</span>
+                <span className="text-[#999] shrink-0">诊断路径：</span>
+                <span className="text-[#383838]">绝缘阻值异常 → 绝缘材料受潮 → 壳体密封性下降 → 壳体出现分层缺陷 → 铝皮飞边导致模具老化龟裂</span>
+                <span className="text-[#999] shrink-0">失效范围：</span>
+                <span className="text-[#383838]">偶发失效，未发现批量风险</span>
+                <span className="text-[#999] shrink-0">推荐措施：</span>
+                <span className="text-[#383838]">已断点，暂无推荐措施</span>
               </div>
             </div>
           ) : (
@@ -1126,6 +1324,10 @@ function Msg8({
 
 type MsgKey =
   | "msg1"
+  | "msg1b"
+  | "msg_report"
+  | "msg_ptc"
+  | "msg_ptc_reply"
   | "a2a-start"
   | "msg2r"
   | "msg2"
@@ -1140,6 +1342,10 @@ type MsgKey =
 
 const MSG_MAP: Record<MsgKey, React.FC<MsgProps>> = {
   msg1: Msg1,
+  msg1b: Msg1b,
+  msg_report: MsgReport,
+  msg_ptc: MsgPtc,
+  msg_ptc_reply: MsgPtcReply,
   "a2a-start": A2ASeparatorStart,
   msg2r: Msg2Running,
   msg2: Msg2,
@@ -1197,13 +1403,26 @@ const DEFAULT_ASSIGNEES: Partial<Record<MsgKey, string>> = {
 };
 
 function getMessages(step: number, agentType: "aftersales" | "quality" = "aftersales"): MsgKey[] {
-  // 两个专家共用同一套 6 步消息流
+  const isQuality = agentType === "quality";
+
+  if (isQuality) {
+    const msg1group: MsgKey[] = step >= 1 ? ["msg1", "msg1b", "msg_report"] : ["msg1"];
+    if (step === 0) return ["msg1"];
+    if (step === 1) return msg1group;
+    if (step === 2) return [...msg1group, "a2a-start", "msg2r"];
+    if (step === 3) return [...msg1group, "a2a-start", "msg2", "msg3", "msg4w"];
+    if (step === 4) return [...msg1group, "a2a-start", "msg2", "msg3", "msg4d", "msg5"];
+    return [...msg1group, "a2a-start", "msg2", "msg3", "msg4d", "msg5", "a2a-end", "msg8"];
+  }
+
+  // 索赔专家：step=1 插入PTC审核，step=2起进入A2A
   if (step === 0) return ["msg1"];
-  if (step === 1) return ["msg1", "a2a-start", "msg2r"];
-  if (step === 2) return ["msg1", "a2a-start", "msg2", "msg3", "msg4w"];
-  if (step === 3) return ["msg1", "a2a-start", "msg2", "msg3", "msg4d", "msg5"];
-  if (step === 4) return ["msg1", "a2a-start", "msg2", "msg3", "msg4d", "msg5", "a2a-end", "msg7"];
-  return ["msg1", "a2a-start", "msg2", "msg3", "msg4d", "msg5", "a2a-end", "msg8"];
+  if (step === 1) return ["msg1", "msg_ptc"];
+  if (step === 2) return ["msg1", "msg_ptc", "msg_ptc_reply", "a2a-start", "msg2r"];
+  if (step === 3) return ["msg1", "msg_ptc", "msg_ptc_reply", "a2a-start", "msg2", "msg3", "msg4w"];
+  if (step === 4) return ["msg1", "msg_ptc", "msg_ptc_reply", "a2a-start", "msg2", "msg3", "msg4d", "msg5"];
+  if (step === 5) return ["msg1", "msg_ptc", "msg_ptc_reply", "a2a-start", "msg2", "msg3", "msg4d", "msg5", "a2a-end", "msg7"];
+  return ["msg1", "msg_ptc", "msg_ptc_reply", "a2a-start", "msg2", "msg3", "msg4d", "msg5", "a2a-end", "msg8"];
 }
 
 function getAnnotatableKey(messages: MsgKey[]): MsgKey | null {
@@ -1219,6 +1438,7 @@ export function AgentChatPanel({
   step,
   agentType = "aftersales",
   onTaskReassign,
+  onStepAdvance,
 }: {
   step: number;
   agentType?: "aftersales" | "quality";
@@ -1226,6 +1446,7 @@ export function AgentChatPanel({
     taskId: number,
     assignees: string[],
   ) => void;
+  onStepAdvance?: () => void;
 }) {
   const bottomRef = useRef<HTMLDivElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -1372,6 +1593,7 @@ export function AgentChatPanel({
                     setReassignModal({ open: true, key })
                   }
                   agentType={agentType}
+                  {...(key === "msg_ptc" ? { onStepAdvance } : {})}
                 />
               );
 
